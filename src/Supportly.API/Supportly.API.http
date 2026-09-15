@@ -1,0 +1,6 @@
+@Supportly.API_HostAddress = http://localhost:5088
+
+GET {{Supportly.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

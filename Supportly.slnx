@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Supportly.API/Supportly.API.csproj" />
+    <Project Path="src/Supportly.BusinessObjects/Supportly.BusinessObjects.csproj" />
+    <Project Path="src/Supportly.Repositories/Supportly.Repositories.csproj" />
+    <Project Path="src/Supportly.Services/Supportly.Services.csproj" />
+  </Folder>
+  <Folder Name="/test/">
+    <Project Path="test/Supportly.IntegrationTests/Supportly.IntegrationTests.csproj" />
+    <Project Path="test/Supportly.UnitTests/Supportly.UnitTests.csproj" />
+  </Folder>
+</Solution>
