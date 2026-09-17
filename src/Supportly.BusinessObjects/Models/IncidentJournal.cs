@@ -6,8 +6,10 @@ public class IncidentJournal : BaseEntity
 {
     // Properties
     public Guid IncidentId { get; set; }
+    
     public IncidentJournalType Type { get; set; }
-    public string? Content { get; set; }
+
+    public required string Content { get; set; }
     
     
     // Relationships

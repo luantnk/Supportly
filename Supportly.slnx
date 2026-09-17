@@ -1,5 +1,6 @@
 <Solution>
   <Folder Name="/src/">
+    <File Path="src\compose.yml" />
     <Project Path="src/Supportly.API/Supportly.API.csproj" />
     <Project Path="src/Supportly.BusinessObjects/Supportly.BusinessObjects.csproj" />
     <Project Path="src/Supportly.Repositories/Supportly.Repositories.csproj" />

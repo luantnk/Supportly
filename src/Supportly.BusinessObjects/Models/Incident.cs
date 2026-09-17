@@ -37,4 +37,10 @@ public class Incident : BaseEntity
     public DateTime? ResolvedAt { get; set; }
 
     public ICollection<IncidentActivity> IncidentActivities { get; set; } = new List<IncidentActivity>();
+    
+    public ICollection<IncidentJournal> IncidentJournals  { get; set; } = new List<IncidentJournal>();
+    
+    public ICollection<IncidentKnowledge> IncidentKnowledges { get; set; } = new List<IncidentKnowledge>();
+    
+    public ICollection<IncidentWatchList>  IncidentWatchLists { get; set; } = new List<IncidentWatchList>();
 }

@@ -4,6 +4,8 @@ public class IncidentActivity : BaseEntity
 {
     // Properties
     public Guid IncidentId { get; set; }
+
+    public Guid UserId { get; set; }
     
     public string? ActivityType { get; set; }
     
@@ -15,4 +17,6 @@ public class IncidentActivity : BaseEntity
     
     // Relationship
     public Incident Incident { get; set; } = null!;
+
+    public ApplicationUser User { get; set; } = null!;
 }
