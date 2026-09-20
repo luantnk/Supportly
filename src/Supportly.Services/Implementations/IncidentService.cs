@@ -2,6 +2,7 @@ using Mapster;
 using Supportly.BusinessObjects.Enums;
 using Supportly.BusinessObjects.Models;
 using Supportly.Repositories.Interface;
+using Supportly.Services.DTOs.Common;
 using Supportly.Services.DTOs.Incidents;
 using Supportly.Services.Interfaces;
 
@@ -9,6 +10,36 @@ namespace Supportly.Services.Implementations;
 
 public class IncidentService(IUnitOfWork unitOfWork) : IIncidentService
 {
+    private const int DefaultPageSize = 20;
+    private const int MaxPageSize = 100;
+
+    public async Task<PagedResponse<IncidentListItemResponse>> GetAsync(
+        IncidentQuery query,
+        CancellationToken cancellationToken = default)
+    {
+        var page = Math.Max(query.Page, 1);
+        var pageSize = Math.Clamp(
+            query.PageSize <= 0 ? DefaultPageSize : query.PageSize,
+            1,
+            MaxPageSize);
+
+        var (items, totalCount) = await unitOfWork.Incidents
+            .GetPagedAsync<IncidentListItemResponse>(
+                query.AssignedTo,
+                query.Status,
+                page,
+                pageSize,
+                cancellationToken);
+
+        return new PagedResponse<IncidentListItemResponse>
+        {
+            Items = items,
+            Page = page,
+            PageSize = pageSize,
+            TotalCount = totalCount,
+        };
+    }
+
     public async Task<IncidentResponse?> GetByIdAsync(
         Guid id,
         CancellationToken cancellationToken = default)
@@ -32,19 +63,6 @@ public class IncidentService(IUnitOfWork unitOfWork) : IIncidentService
                 cancellationToken);
 
         return incident?.Adapt<IncidentResponse>();
-    }
-
-    public async Task<IReadOnlyList<IncidentListItemResponse>> GetAssignedToAsync(
-        Guid userId,
-        CancellationToken cancellationToken = default)
-    {
-        var incidents = await unitOfWork.Incidents
-            .GetAssignedToAsync(
-                userId,
-                cancellationToken);
-
-        return incidents
-            .Adapt<IReadOnlyList<IncidentListItemResponse>>();
     }
 
     public async Task<IncidentResponse> CreateAsync(
@@ -95,7 +113,10 @@ public class IncidentService(IUnitOfWork unitOfWork) : IIncidentService
         if (incident is null)
             return false;
 
-        unitOfWork.Incidents.Remove(incident);
+        incident.IsDeleted = true;
+        incident.DeletedAt = DateTime.UtcNow;
+
+        unitOfWork.Incidents.Update(incident);
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
 

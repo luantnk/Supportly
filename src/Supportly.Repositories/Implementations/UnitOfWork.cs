@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore.Storage;
 using Supportly.BusinessObjects;
 using Supportly.BusinessObjects.Models;
 using Supportly.Repositories.Interface;
+using Supportly.Repositories.Interfaces;
 
 namespace Supportly.Repositories.Implementation;
 

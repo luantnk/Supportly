@@ -1,4 +1,5 @@
 using Supportly.BusinessObjects.Models;
+using Supportly.Repositories.Interfaces;
 
 namespace Supportly.Repositories.Interface;
 

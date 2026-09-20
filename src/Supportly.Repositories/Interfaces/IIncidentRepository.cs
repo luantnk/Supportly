@@ -1,6 +1,8 @@
+using Supportly.BusinessObjects.Enums;
 using Supportly.BusinessObjects.Models;
+using Supportly.Repositories.Interface;
 
-namespace Supportly.Repositories.Interface;
+namespace Supportly.Repositories.Interfaces;
 
 public interface IIncidentRepository : IGenericRepository<Incident>
 {
@@ -16,7 +18,15 @@ public interface IIncidentRepository : IGenericRepository<Incident>
         bool asNoTracking = false,
         CancellationToken cancellationToken = default);
 
-    Task<IReadOnlyList<Incident>> GetAssignedToAsync(
-        Guid userId,
+    /// <summary>
+    /// Returns a page of incidents, optionally filtered by assignee and status, ordered by
+    /// <see cref="Incident.CreatedAt"/> descending. Projects directly to <typeparamref name="TResult"/>
+    /// so only the required columns are read from the database.
+    /// </summary>
+    Task<(IReadOnlyList<TResult> Items, int TotalCount)> GetPagedAsync<TResult>(
+        Guid? assignedToId,
+        IncidentState? state,
+        int page,
+        int pageSize,
         CancellationToken cancellationToken = default);
 }

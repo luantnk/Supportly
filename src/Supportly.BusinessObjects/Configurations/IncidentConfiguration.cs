@@ -22,7 +22,10 @@ public class IncidentConfiguration : IEntityTypeConfiguration<Incident>
 
         builder.Property(i => i.ResolutionCode)
             .HasMaxLength(100);
-        
+
+        // Soft delete: excludes deleted incidents from every query against this entity.
+        builder.HasQueryFilter(i => !i.IsDeleted);
+
         // Relationships
         builder.HasOne(i => i.ParentIncident)
             .WithMany() 

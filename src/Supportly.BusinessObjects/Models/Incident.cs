@@ -36,6 +36,10 @@ public class Incident : BaseEntity
 
     public DateTime? ResolvedAt { get; set; }
 
+    public bool IsDeleted { get; set; }
+
+    public DateTime? DeletedAt { get; set; }
+
     public ICollection<IncidentActivity> IncidentActivities { get; set; } = new List<IncidentActivity>();
     
     public ICollection<IncidentJournal> IncidentJournals  { get; set; } = new List<IncidentJournal>();

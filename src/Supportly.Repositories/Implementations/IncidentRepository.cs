@@ -1,7 +1,10 @@
+using Mapster;
 using Microsoft.EntityFrameworkCore;
 using Supportly.BusinessObjects;
+using Supportly.BusinessObjects.Enums;
 using Supportly.BusinessObjects.Models;
 using Supportly.Repositories.Interface;
+using Supportly.Repositories.Interfaces;
 
 namespace Supportly.Repositories.Implementation;
 
@@ -37,12 +40,30 @@ public class IncidentRepository : GenericRepository<Incident>, IIncidentReposito
         return await query.FirstOrDefaultAsync(i => i.Id == id, cancellationToken);
     }
 
-    public async Task<IReadOnlyList<Incident>> GetAssignedToAsync(
-        Guid userId,
+    public async Task<(IReadOnlyList<TResult> Items, int TotalCount)> GetPagedAsync<TResult>(
+        Guid? assignedToId,
+        IncidentState? state,
+        int page,
+        int pageSize,
         CancellationToken cancellationToken = default)
-        => await _dbSet
-            .AsNoTracking()
-            .Where(i => i.AssignedToId == userId)
+    {
+        IQueryable<Incident> query = _dbSet.AsNoTracking();
+
+        if (assignedToId is not null)
+            query = query.Where(i => i.AssignedToId == assignedToId);
+
+        if (state is not null)
+            query = query.Where(i => i.State == state);
+
+        var totalCount = await query.CountAsync(cancellationToken);
+
+        var items = await query
             .OrderByDescending(i => i.CreatedAt)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ProjectToType<TResult>()
             .ToListAsync(cancellationToken);
+
+        return (items, totalCount);
+    }
 }
